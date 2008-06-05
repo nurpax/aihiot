@@ -1,0 +1,26 @@
+
+Approximate directory structure
+-------------------------------
+
+build
+  # hello world, possibly linking in a library
+  ocaml
+    # both bytecode and native, link in extlib + some ocaml basic library
+    simple_makefile
+    omake
+  win32
+    msvc_bat
+    msvc_makefile
+
+gfx
+  draw_triangle
+    ocaml
+    win32
+  
+  opengl
+    glut
+    win32
+
+db
+  read_row
+    ocaml_postgresql
