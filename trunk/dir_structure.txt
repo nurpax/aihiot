@@ -2,6 +2,8 @@
 Approximate directory structure
 -------------------------------
 
+foo
+
 build
   # hello world, possibly linking in a library
   ocaml
