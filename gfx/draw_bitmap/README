@@ -1,0 +1,2 @@
+Plot pixels into an array of pixels and render the array on the
+window.  The pixel array is updated every frame to enable animation.
