@@ -1,0 +1,10 @@
+
+OCAML_OTHER_LIBS += graphics
+
+
+FILES[] =
+   main
+
+PROGRAM = draw_triangle
+
+.DEFAULT: $(OCamlProgram $(PROGRAM), $(FILES))
