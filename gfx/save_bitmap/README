@@ -1,5 +1,5 @@
 The examples in the below subdirectories demonstrate how to simply
-write contents of a pixel buffer (framebuffer) to a bitmap file.
+write the contents of a pixel buffer (framebuffer) to a bitmap file.
 
 The actual code for saving bitmaps is meant to be completely
 independent of external libraries.  Thus no zlib or libpng should be
