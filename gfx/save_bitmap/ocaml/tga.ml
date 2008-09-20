@@ -9,7 +9,7 @@ let write_tga_chnl chnl pixels w h =
   List.iter (fun e -> output_byte chnl e) header;
   for y = 0 to h-1 do
     for x = 0 to w-1 do
-      let c = pixels.(x+y*w) in
+      let c = pixels.(x+(h-1-y)*w) in (* h-1-y = Flip image *)
       output_byte chnl (c land 255);
       output_byte chnl ((c lsr 8) land 255);
       output_byte chnl ((c lsr 16) land 255);
