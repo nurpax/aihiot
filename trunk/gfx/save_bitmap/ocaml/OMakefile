@@ -1,0 +1,9 @@
+
+OCAML_OTHER_LIBS += graphics
+
+
+FILES[] = tga main
+
+PROGRAM = save_bitmap
+
+.DEFAULT: $(OCamlProgram $(PROGRAM), $(FILES))
