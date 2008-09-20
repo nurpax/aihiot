@@ -1,5 +1,5 @@
 
-(* Draw a red triangle over the 400x400 screen using OCaml's Graphics
+(* Draw a red triangle over the 200x200 screen using OCaml's Graphics
    module.  Wait until the user clicks on the window and exit.
    
    This is by far the simplest method of doing it and doesn't require
