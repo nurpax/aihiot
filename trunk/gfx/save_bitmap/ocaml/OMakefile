@@ -2,7 +2,7 @@
 OCAML_OTHER_LIBS += graphics
 
 
-FILES[] = tga main
+FILES[] = png tga main
 
 PROGRAM = save_bitmap
 

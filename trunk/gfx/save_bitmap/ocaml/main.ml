@@ -11,9 +11,15 @@ let save_screenshot fn =
   let w = Graphics.size_x () in
   let h = Graphics.size_y () in
   let img = Graphics.get_image 0 0 w h in
-  let pixels = 
-    Array.concat (List.rev (Array.to_list (Graphics.dump_image img))) in
-  Tga.write_tga fn pixels w h
+  let pixels = Array.concat (Array.to_list (Graphics.dump_image img)) in
+  
+  if Filename.check_suffix fn ".png" then
+    Png.write_png fn pixels w h
+  else
+    begin
+      assert (Filename.check_suffix fn ".tga");
+      Tga.write_tga fn pixels w h
+    end
 
 let _ = 
   (* First draw something on the screen.  Couple of triangles will
@@ -24,7 +30,8 @@ let _ =
   Graphics.set_color 0x3322ff;
   Graphics.fill_poly [| (160,0); (240,200); (320,0) |];
   save_screenshot "screenshot.tga";
-  Printf.printf "Screenshot saved to file `screenshot.tga'.\n";
+  save_screenshot "screenshot.png";
+  Printf.printf "Screenshot saved to files `screenshot.tga' and `screenshot.png'.\n";
   flush_all ();
   while not (Graphics.button_down ()) do
     ()
