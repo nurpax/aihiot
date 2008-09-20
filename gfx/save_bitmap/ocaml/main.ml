@@ -1,10 +1,12 @@
 
-(* Save the contents of a Graphics framebuffer to a Targa bitmap file. 
+(* Save the contents of a Graphics framebuffer to a .tga and a .png
+   bitmap file.
 
-   Saving the .tga is intended to be free of external library
-   dependencies to make it easy to grab into new projects.
+   Both .tga and .png exporters are intended to be completely free of
+   external library dependencies to make it easy to grab them into new
+   projects.
 
-   Code to actually save the Targa file is in Tga module.
+   Actual exporter code in Tga and Png modules.
 *)
 
 let save_screenshot fn =

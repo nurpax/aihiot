@@ -2,20 +2,15 @@
 module I32 = Int32
 
 let (>>) = I32.shift_right_logical
-let (<<) = I32.shift_left
 let (&) = I32.logand
 let (^) = I32.logxor
-
-let (|>) f g = g f
 
 let crc_table =
   let tt = I32.of_string "0xedb88320" in
   let crc i =
     let t = ref (I32.of_int i) in
     for j = 0 to 7 do
-      let t0 = 
-        tt & (I32.add (I32.lognot (!t & I32.one)) I32.one) in
-      t := (!t >> 1) ^ t0
+      t := (!t >> 1) ^ (tt & (I32.succ (I32.lognot (!t & I32.one))))
     done;
     !t in
   let tbl = Array.init 256 crc in
@@ -59,10 +54,10 @@ let write_png_chnl chnl pixels w h =
     let (a1,a2) = acc_adler (a1,a2) b in
     (acc_crc crc v,a1,a2) in
 
-  let crc = 
-    List.fold_left
-      (fun crc v -> output_crc_byte crc v)
-      (I32.of_string "0x575e51f5") hdr in
+  let write_crc_bytes acc lst = 
+    List.fold_left output_crc_byte acc lst in
+
+  let crc = write_crc_bytes (I32.of_string "0x575e51f5") hdr in
   write_dword chnl (I32.lognot crc);
   write_dword chnl (I32.of_int idatlen);
   Printf.fprintf chnl "IDAT\x78\x01";
@@ -79,12 +74,11 @@ let write_png_chnl chnl pixels w h =
           let pix = pixels.(x+y*w) in
           let pix_bytes = [pix lsr 16; pix lsr 8; pix; 255] in
           output_row (x+1) 
-            (List.fold_left (fun acc b -> output_adler_byte acc b) acc pix_bytes)
+            (List.fold_left output_adler_byte acc pix_bytes)
         else
           acc in
 
-      let crc = 
-        List.fold_left output_crc_byte crc bytes in
+      let crc = write_crc_bytes crc bytes in
       let adler = 
         output_adler_byte (crc,adler1,adler2) 0 in
       write_rows (output_row 0 adler) (y+1)
@@ -95,13 +89,12 @@ let write_png_chnl chnl pixels w h =
     write_rows ((I32.of_string "0x13e5812d"),1,0) 0 in
 
   let bytes = [adler2 lsr 8; adler2; adler1 lsr 8; adler1] in
-  let crc = List.fold_left output_crc_byte crc bytes in
+  let crc = write_crc_bytes crc bytes in
   write_dword chnl (I32.lognot crc);
-  write_dword chnl (I32.zero);
-  Printf.fprintf chnl "IEND\xae\x42\x60\x82"
+  Printf.fprintf chnl "\x00\x00\x00\x00IEND\xae\x42\x60\x82"
 
     
-(** Save a Targa (.png) file to file `filename'. *)
+(** Save a .png file to file `filename'. *)
 let write_png filename pixels w h =
   let chnl = open_out_bin filename in
   try
