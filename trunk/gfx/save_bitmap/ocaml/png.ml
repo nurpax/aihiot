@@ -6,18 +6,17 @@ let (&) = I32.logand
 let (^) = I32.logxor
 
 let crc_table =
-  let tt = I32.of_string "0xedb88320" in
   let crc i =
     let t = ref (I32.of_int i) in
     for j = 0 to 7 do
-      t := (!t >> 1) ^ (tt & (I32.succ (I32.lognot (!t & I32.one))))
+      t := (!t >> 1) ^ (0xedb88320l & (I32.succ (I32.lognot (!t & I32.one))))
     done;
     !t in
   let tbl = Array.init 256 crc in
   tbl
     
 let acc_crc crc v =
-  crc_table.(I32.to_int ((crc ^ (I32.of_int v)) & I32.of_int 0xff)) ^ (crc >> 8)
+  crc_table.(I32.to_int ((crc ^ (I32.of_int v)) & 0xffl)) ^ (crc >> 8)
 
 let acc_adler (a1,a2) v =
   let a1' = (a1 + v) mod 65521 in
@@ -37,7 +36,7 @@ let write_dword chnl i =
 let write_png_chnl chnl pixels w h =
   let bpp = 4 in
   let idatlen = 6 + h * (6 + w * bpp) in
-  Printf.fprintf chnl "\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0dIHDR";
+  output_string chnl "\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0dIHDR";
   let hdr = 
     [0; w lsr 16; w lsr 8; w;
      0; h lsr 16; h lsr 8; h;
@@ -57,10 +56,10 @@ let write_png_chnl chnl pixels w h =
   let write_crc_bytes acc lst = 
     List.fold_left output_crc_byte acc lst in
 
-  let crc = write_crc_bytes (I32.of_string "0x575e51f5") hdr in
+  let crc = write_crc_bytes 0x575e51f5l hdr in
   write_dword chnl (I32.lognot crc);
   write_dword chnl (I32.of_int idatlen);
-  Printf.fprintf chnl "IDAT\x78\x01";
+  output_string chnl "IDAT\x78\x01";
 
   let rec write_rows ((crc,adler1,adler2) as acc) y =
     if y < h then
@@ -86,12 +85,12 @@ let write_png_chnl chnl pixels w h =
       acc in
   
   let (crc,adler1,adler2) = 
-    write_rows ((I32.of_string "0x13e5812d"),1,0) 0 in
+    write_rows (0x13e5812dl,1,0) 0 in
 
   let bytes = [adler2 lsr 8; adler2; adler1 lsr 8; adler1] in
   let crc = write_crc_bytes crc bytes in
   write_dword chnl (I32.lognot crc);
-  Printf.fprintf chnl "\x00\x00\x00\x00IEND\xae\x42\x60\x82"
+  output_string chnl "\x00\x00\x00\x00IEND\xae\x42\x60\x82"
 
     
 (** Save a .png file to file `filename'. *)
