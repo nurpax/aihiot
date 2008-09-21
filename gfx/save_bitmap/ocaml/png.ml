@@ -9,7 +9,7 @@ let crc_table =
   let crc i =
     let t = ref (I32.of_int i) in
     for j = 0 to 7 do
-      t := (!t >> 1) ^ (0xedb88320l & (I32.succ (I32.lognot (!t & I32.one))))
+      t := (!t >> 1) ^ (0xedb88320l & (I32.succ (I32.lognot (!t & 1l))))
     done;
     !t in
   let tbl = Array.init 256 crc in
