@@ -1,4 +1,7 @@
 
+(* Uncompressed .png exporter.  Original C version by Tero Karras.
+   Find the original from ../c/save_bitmap.c. *)
+
 module I32 = Int32
 
 let (>>) = I32.shift_right_logical
@@ -29,7 +32,7 @@ let write_dword chnl i =
   output_byte_i32 (i >> 16);
   output_byte_i32 (i >> 8);
   output_byte_i32 i
-  
+    
 (** Save a .png file to `chnl'.  Note that chnl needs to be opened for
     binary output, otherwise output bytes will get messed up on
     Windows. *)
