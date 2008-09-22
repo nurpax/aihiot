@@ -1,4 +1,9 @@
 
+/* 
+   Self-contained uncompressed .png exporter contributed by 
+   Tero Karras. 
+*/
+
 #include <stdio.h>
 #include <string.h>
 
