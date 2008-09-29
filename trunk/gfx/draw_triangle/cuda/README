@@ -1,0 +1,23 @@
+
+Building
+--------
+
+Batch files are provided to compile for Windows.  Adaptation for Unix
+shells should be fairly trivial.
+
+To build for CUDA emulator (this is the default), run:
+
+m.bat emu
+
+To build for the real device, run:
+
+m.bat hw
+
+Consult CUDA SDK for more build instructions.
+
+Running
+-------
+
+Run r.bat.  If you have all the SDK elements properly in your PATH,
+you should be able to run the executable directly without the batch
+file.
