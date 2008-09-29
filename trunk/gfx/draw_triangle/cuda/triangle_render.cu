@@ -14,23 +14,32 @@ inline int iDivUp(int a, int b)
     return ((a % b) != 0) ? (a / b + 1) : (a / b);
 } // iDivUp
 
-template<class T>
 __global__ void renderTriangle(uchar4 *dst, const int imageW, const int imageH)
 {
     const int ix = blockDim.x * blockIdx.x + threadIdx.x;
     const int iy = blockDim.y * blockIdx.y + threadIdx.y;
 
-    if ((ix < imageW) && (iy < imageH)) {
+    if ((ix < imageW) && (iy < imageH)) 
+    {
         int pixel = imageW * iy + ix;
-        // Convert the Mandelbrot index into a color
+
         uchar4 color;
 
-        color.x = 0;
-        color.y = 0;
-        color.z = 0;
-
-        if (abs(imageW/2-ix) < iy)
+        // Hardcoded triangle renderer (draws the same picture as the
+        // OCaml example).
+        if (abs(iy-imageH/2) < (imageW-ix)/2)
+        {
             color.x = 255;
+            color.y = 0;
+            color.z = 0;
+            color.w = 0;
+        } else
+        {
+            color.x = 255;
+            color.y = 255;
+            color.z = 255;
+            color.w = 0;
+        }
 
         dst[pixel] = color;
     }
@@ -42,7 +51,7 @@ void RunTriangleRender(uchar4 *dst, const int imageW, const int imageH)
     dim3 threads(BLOCKDIM_X, BLOCKDIM_Y);
     dim3 grid(iDivUp(imageW, BLOCKDIM_X), iDivUp(imageH, BLOCKDIM_Y));
 
-    renderTriangle<float><<<grid, threads>>>(dst, imageW, imageH);
+    renderTriangle<<<grid, threads>>>(dst, imageW, imageH);
 
     CUT_CHECK_ERROR("Mandelbrot0_sm10 kernel execution failed.\n");
 } // RunMandelbrot0

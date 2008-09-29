@@ -237,8 +237,8 @@ int main(int argc, char **argv)
         }
     }
     
-    imageW = 256;
-    imageH = 256;
+    imageW = 200;
+    imageH = 200;
 
     printf("Initializing GLUT...\n");
     glutInit(&argc, argv);
