@@ -1,0 +1,9 @@
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Render triangle with F# and WPF"
+    SizeToContent="WidthAndHeight">
+
+   <Path Data="M 0 0 L 200 100 0 200 Z"
+          Fill="Red" />
+</Window>
